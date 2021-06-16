@@ -7,12 +7,12 @@ include $(TOPDIR)/rules.mk
 PKG_NPM_GROUP:=@mareel
 PKG_NPM_NAME:=core
 PKG_NAME:=mareel-connector
-PKG_VERSION:=0.2.7
+PKG_VERSION:=0.3.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NPM_NAME)-$(PKG_VERSION).tgz
 PKG_SOURCE_URL:=https://registry.npmjs.org/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)/-/
-PKG_HASH:=014f2155d0ac7a97c47abd33148ad0a966b89493a06a53836fe64657e60cd47b
+PKG_HASH:=46c04607313290a38653baa8e9385b8c05e1028dceff8b4bcd8b7b3438e091fd
 
 PKG_MAINTAINER:=Empo Inc. <admin@empo.im>
 PKG_LICENSE:=GPL-3
@@ -33,7 +33,7 @@ define Package/mareel-connector
   SECTION:=lang
   CATEGORY:=Languages
   TITLE:=Mareel Connector
-  URL:=https://yarnpkg.com/
+  URL:=https://mareel.io/
   DEPENDS:=+node
 endef
 
@@ -74,16 +74,15 @@ define Package/mareel-connector/install
 	$(CP) $(PKG_BUILD_DIR)/{bin,lib} \
 		$(1)/usr/lib/node/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)/
 	$(INSTALL_DIR) $(1)/usr/bin
-	#$(LN) ../lib/node/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)/bin/yarn.js $(1)/usr/bin/yarn
-	#$(LN) ../lib/node/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)/bin/yarn.js $(1)/usr/bin/yarnpkg
+	$(LN) ../lib/node/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)/cli/connectord.js $(1)/usr/bin/connectord
 	$(INSTALL_DIR) $(1)/usr/lib/node_modules
 	$(LN) ../node/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME) $(1)/usr/lib/node_modules/$(PKG_NPM_GROUP/$(PKG_NPM_NAME)
 endef
 
 define Package/mareel-connector/postrm
 #!/bin/sh
-rm /usr/lib/node_modules/yarn || true
-rm -rf /usr/lib/node/yarn || true
+rm /usr/lib/node_modules/@mareel/core || true
+rm -rf /usr/lib/node/@mareel/core || true
 endef
 
 define Host/Compile
@@ -108,8 +107,7 @@ define Host/Install
 	$(CP) $(HOST_BUILD_DIR)/{bin,lib} \
 		$(1)/lib/node_modules/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)/
 	$(INSTALL_DIR) $(1)/bin
-	#$(LN) ../lib/node_modules/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)/bin/yarn.js $(1)/bin/yarn
-	#$(LN) ../lib/node_modules/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)/bin/yarn.js $(1)/bin/yarnpkg
+	$(LN) ../lib/node_modules/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)/cli/connectord.js $(1)/bin/connectord
 endef
 
 $(eval $(call HostBuild))
