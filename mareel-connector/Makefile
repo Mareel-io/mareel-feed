@@ -66,7 +66,7 @@ define Build/Compile
 endef
 
 define Package/mareel-connector/install
-	$(INSTALL_DIR) $(1)/usr/lib/node/$(PKG_NPM_GROUP/$(PKG_NPM_NAME)
+	$(INSTALL_DIR) $(1)/usr/lib/node/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)
 	$(CP) $(PKG_BUILD_DIR)/{package.json,LICENSE} \
 		$(1)/usr/lib/node/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)/
 	$(CP) $(PKG_BUILD_DIR)/README.md \
@@ -76,7 +76,12 @@ define Package/mareel-connector/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(LN) ../lib/node/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)/cli/connectord.js $(1)/usr/bin/connectord
 	$(INSTALL_DIR) $(1)/usr/lib/node_modules
-	$(LN) ../node/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME) $(1)/usr/lib/node_modules/$(PKG_NPM_GROUP/$(PKG_NPM_NAME)
+	$(LN) ../node/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME) $(1)/usr/lib/node_modules/$(PKG_NPM_GROUP)/$(PKG_NPM_NAME)
+	$(INSTALL_DIR) $(1)/etc
+	$(INSTALL_DIR) $(1)/etc/mareel
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/etc/init.d/mareel-connector $(1)/etc/init.d/
+	$(INSTALL_BIN) ./files/etc/mareel/connectord.yaml $(1)/etc/mareel/
 endef
 
 define Package/mareel-connector/postrm

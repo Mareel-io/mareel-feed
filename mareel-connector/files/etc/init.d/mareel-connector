@@ -1,0 +1,19 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2021-2021 Mareel.io 
+
+START=99
+STOP=80
+
+USE_PROCD=1
+
+CONNECTOR_BIN=/usr/bin/connectord
+CONNECTOR_CONFIG=/etc/mareel/connectord.yaml
+
+start_service() {
+	procd_open_instance
+	procd_set_param respawn
+	procd_set_param file "$CONNECTOR_CONFIG"
+	# TODO: Implement cmdline
+	procd_set_param command $CONNECTOR_BIN
+	procd_close_instance
+}
