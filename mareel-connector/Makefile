@@ -34,7 +34,7 @@ define Package/mareel-connector
   CATEGORY:=Languages
   TITLE:=Mareel Connector
   URL:=https://mareel.io/
-  DEPENDS:=+node
+  DEPENDS:=+node python3
 endef
 
 define Package/mareel-connector/description
