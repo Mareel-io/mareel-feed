@@ -1,0 +1,20 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2021-2021 Mareel.io 
+
+# Start right after Network
+START=21
+STOP=80
+
+USE_PROCD=1
+
+CFGD_BIN=/usr/bin/ciscocfgd
+
+start_service() {
+	procd_open_instance
+	procd_set_param respawn
+	# TODO: Implement configfile
+	#procd_set_param file "$CONNECTOR_CONFIG"
+	# TODO: Implement cmdline
+	procd_set_param command $CFGD_BIN
+	procd_close_instance
+}
