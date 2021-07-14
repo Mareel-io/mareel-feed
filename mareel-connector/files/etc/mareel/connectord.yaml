@@ -1,3 +1,6 @@
+client:
+  # Uses external CiscoConfigDaemon from OpenWRT system
+  disableCiscoConfigDaemon: true
 remote:
   token: 'Authentication token here'
   url: 'http://localhost:3000'
