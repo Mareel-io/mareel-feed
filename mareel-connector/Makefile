@@ -30,7 +30,7 @@ define Package/mareel-connector
   CATEGORY:=Languages
   TITLE:=Mareel Connector
   URL:=https://mareel.io/
-  DEPENDS:=+node +python3 +libpthread
+  DEPENDS:=+node +python3 +libpthread +python3-ciscocfg
 endef
 
 define Package/mareel-connector/description
