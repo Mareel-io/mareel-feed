@@ -17,7 +17,7 @@ if [ "$UPGRADESIG" == '' ]; then
 fi
 
 # Verify the signature
-gpg --no-default-keyring --keyring /etc/mareel-keys/$SIGKEY_VARIANT.gpg --verify "$UPGRADESIG" "$UPGRADEFILE"
+gpg2 --no-default-keyring --keyring /etc/mareel-keys/$SIGKEY_VARIANT.gpg --verify "$UPGRADESIG" "$UPGRADEFILE"
 
 if [ "$?" != "0" ]; then
     echo "Failed to verify the update file. Refuse to flash"
@@ -45,13 +45,17 @@ elif [ "$SLOT_SUFFIX" == 'b' ]; then
     TARGET_SLOT='a'
 fi
 
+echo "Upgrading kernel..."
 mkdir -p /tmp/boot
 mount "$TARGET_BOOT" /tmp/boot
 tar -xOf "$UPGRADEFILE" kernel.itb.zstd | zstd -d > /tmp/boot/kernel.itb
 umount /tmp/boot
+echo "Upgrading rootfs..."
 tar -xOf "$UPGRADEFILE" rootfs.img.zstd | zstd -d | dd of="$TARGET_ROOTFS" bs=4096
 
-echo "Upgrade complete."
+echo "Changing slot..."
 
-abtool --set-active-slot "$TARGET_SLOT"
-abtool -s "$TARGET_SLOT" --set-remaining-try 3 --set-successful-boot true --set-verity-corrupted false
+abtool --set-active-slot "$TARGET_SLOT" /dev/mmcblk0p2
+abtool -s "$TARGET_SLOT" --set-remaining-try 3 --set-successful-boot true --set-verity-corrupted false /dev/mmcblk0p2
+
+echo "Upgrade complete! Have a nice day."

@@ -18,7 +18,7 @@ define Package/mareel-sysupgrade
   CATEGORY:=Utilities
   TITLE:=mareel-sysupgrade
   URL:=https://mareel.io
-  DEPENDS:=+xz-utils +zstd +gnupg +abtool
+  DEPENDS:=+xz-utils +zstd +gnupg2 +abtool
 endef
 
 define Package/mareel-sysupgrade/description
