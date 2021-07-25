@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# TODO: Implement unlocked / non-unlocked decision logic
+# TODO: Implement channel decision logic
+
+SIGKEY_VARIANT=testkey
+
+UPGRADEFILE="$1"
+UPGRADESIG="$2"
+
+if [ "$UPGRADEFILE" == '' ]; then
+    exit 1
+fi
+
+if [ "$UPGRADESIG" == '' ]; then
+    exit 1
+fi
+
+# Verify the signature
+gpg --no-default-keyring --keyring /etc/mareel-keys/$SIGKEY_VARIANT.gpg --verify "$UPGRADESIG" "$UPGRADEFILE"
+
+if [ "$?" != "0" ]; then
+    echo "Failed to verify the update file. Refuse to flash"
+    exit "$?"
+fi
+
+# Check system is in A or B
+CMDLINE=$(cat /proc/cmdline)
+SLOT_SUFFIX=''
+for x in $CMDLINE; do
+    [[ $x = androidboot.slot_suffix=* ]] || continue
+    SLOT_SUFFIX=$(echo $x | cut -d= -f 2)
+done
+
+TARGET_ROOTFS=''
+TARGET_BOOT=''
+TARGET_SLOT=''
+if [ "$SLOT_SUFFIX" == 'a' ]; then
+    TARGET_ROOTFS='/dev/mmcblk0p6'
+    TARGET_BOOT='/dev/mmcblk0p4'
+    TARGET_SLOT='b'
+elif [ "$SLOT_SUFFIX" == 'b' ]; then
+    TARGET_ROOTFS='/dev/mmcblk0p5'
+    TARGET_BOOT='/dev/mmcblk0p3'
+    TARGET_SLOT='a'
+fi
+
+mkdir -p /tmp/boot
+mount "$TARGET_BOOT" /tmp/boot
+tar -xOf "$UPGRADEFILE" kernel.itb.zstd | zstd -d > /tmp/boot/kernel.itb
+umount /tmp/boot
+tar -xOf "$UPGRADEFILE" rootfs.img.zstd | zstd -d | dd of="$TARGET_ROOTFS" bs=4096
+
+echo "Upgrade complete."
+
+abtool --set-active-slot "$TARGET_SLOT"
+abtool -s "$TARGET_SLOT" --set-remaining-try 3 --set-successful-boot true --set-verity-corrupted false
