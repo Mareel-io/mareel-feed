@@ -1,0 +1,12 @@
+#!/bin/sh
+
+START=00
+STOP=99
+
+start() {
+    /usr/sbin/mareel-restore
+}
+
+stop() {
+    return 0
+}

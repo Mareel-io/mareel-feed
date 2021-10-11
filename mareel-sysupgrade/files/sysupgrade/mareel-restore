@@ -1,0 +1,11 @@
+#!/bin/sh
+
+FLAGFILE=/etc/.mareel-restore-flag
+
+if [ ! -f "${FLAGFILE}" ]; then
+    echo "Restoring backup..."
+    rm -rf /etc/config/*
+    cp -arv /mnt/ota_backup/* /etc/config/
+    touch "${FLAGFILE}"
+    reboot
+fi

@@ -36,6 +36,9 @@ define Package/mareel-sysupgrade/install
 	$(INSTALL_DIR) $(1)/usr
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) ./files/sysupgrade/mareel-sysupgrade $(1)/usr/sbin/
+	$(INSTALL_BIN) ./files/sysupgrade/mareel-restore $(1)/usr/sbin/
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/etc/init.d/mareel-restore $(1)/etc/init.d/mareel-restore
 endef
 
 $(eval $(call BuildPackage,mareel-sysupgrade))

@@ -53,6 +53,11 @@ umount /tmp/boot
 echo "Upgrading rootfs..."
 tar -xOf "$UPGRADEFILE" rootfs.img.zstd | zstd -d | dd of="$TARGET_ROOTFS" bs=4096
 
+echo "Backing up the config..."
+rm -rf /mnt/ota_backup
+mkdir -p /mnt/ota_backup
+cp -ar /etc/config/* /mnt/ota_backup
+
 echo "Changing slot..."
 
 abtool --set-active-slot "$TARGET_SLOT" /dev/mmcblk0p2
