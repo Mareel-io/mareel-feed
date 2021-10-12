@@ -43,6 +43,9 @@ elif [ "$SLOT_SUFFIX" == 'b' ]; then
     TARGET_ROOTFS='/dev/mmcblk0p5'
     TARGET_BOOT='/dev/mmcblk0p3'
     TARGET_SLOT='a'
+else
+    echo "Unknown slot_suffix ${SLOT_SUFFIX}"
+    exit 1
 fi
 
 echo "Upgrading kernel..."
@@ -61,6 +64,7 @@ cp -ar /etc/config/* /mnt/ota_backup
 echo "Changing slot..."
 
 abtool --set-active-slot "$TARGET_SLOT" /dev/mmcblk0p2
-abtool -s "$TARGET_SLOT" --set-remaining-try 3 --set-successful-boot true --set-verity-corrupted false /dev/mmcblk0p2
+abtool -s "$TARGET_SLOT" --set-priority 15 --set-remaining-try 3 --set-successful-boot true --set-verity-corrupted false /dev/mmcblk0p2
+abtool -s "$SLOT_SUFFIX" --set-priority 10 /dev/mmcblk0p2
 
 echo "Upgrade complete! Have a nice day."
