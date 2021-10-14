@@ -1,9 +1,10 @@
 client:
   # Uses external CiscoConfigDaemon from OpenWRT system
   disableCiscoConfigDaemon: true
+  disableTFTPDaemon: false
 remote:
   token: 'Authentication token here'
   url: 'http://localhost:3000'
 tftpserver:
   hostip: '10.64.48.11'
-devices: []
+devicedb: '/mnt/devicedb.json'
